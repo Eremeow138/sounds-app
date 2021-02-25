@@ -118,10 +118,20 @@ function slide(items, prev, next) {
 
     allowShift = true;
     createPlayers(index + 1);
+    startPlayers()
   }
 }
+
 createPlayers(0);
+// startPlayers()
 slide(sliderItems, prev, next);
+
+function startPlayers() {
+  const players = document.querySelectorAll('audio');
+  const playersGui = document.querySelectorAll('.audio-toggle');
+  playersGui.forEach(item => item.classList.add('playing'));
+  players.forEach(item => item.play());
+}
 
 //создаем плееры
 
@@ -146,6 +156,8 @@ function createPlayers(slideIndex) {
     audio.src = src;
     audio.volume = 0.35;
     audio.dataset.sound = element;
+    audio.autoplay = true;
+    audio.loop = true;
     document.body.append(audio);
     // добавляем гуи плеры
     playersWrapper.append(createGuiPlayer(element));
