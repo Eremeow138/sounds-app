@@ -4,6 +4,7 @@ const sliderItems = document.querySelector('.slider-wrapper');
 const prev = document.querySelector('.slider-btn--prev');
 const next = document.querySelector('.slider-btn--next');
 const playersWrapper = document.querySelector('.playlist');
+const btnFullScreen = document.querySelector('.fullscreen');
 function slide(items, prev, next) {
   let posX1 = 0,
     posX2 = 0,
@@ -218,5 +219,46 @@ playersWrapper.addEventListener('click', (event) => {
         item.volume = event.target.value / 100;
       }
     });
+  }
+});
+
+btnFullScreen.addEventListener('click', (event) => {
+  if (document.fullscreenElement !== null) {
+    deactivateFullscreen(document.documentElement);
+  } else {
+    activateFullscreen(document.documentElement);
+  }
+});
+
+function activateFullscreen(element) {
+  if (element.requestFullscreen) {
+    element.requestFullscreen();
+  } else if (element.mozRequestFullScreen) {
+    element.mozRequestFullScreen();
+  } else if (element.webkitRequestFullscreen) {
+    element.webkitRequestFullscreen();
+  } else if (element.msRequestFullscreen) {
+    element.msRequestFullscreen();
+  }
+}
+
+// Whack fullscreen
+function deactivateFullscreen() {
+  if (document.exitFullscreen) {
+    document.exitFullscreen();
+  } else if (document.mozCancelFullScreen) {
+    document.mozCancelFullScreen();
+  } else if (document.webkitExitFullscreen) {
+    document.webkitExitFullscreen();
+  }
+}
+
+document.addEventListener('fullscreenchange', (event) => {
+  if (document.fullscreenElement) {
+    btnFullScreen.classList.remove('openfullscreen');
+    btnFullScreen.classList.add('exitfullscreen');
+  } else {
+    btnFullScreen.classList.remove('exitfullscreen');
+    btnFullScreen.classList.add('openfullscreen');
   }
 });
