@@ -1,4 +1,5 @@
-let slideIndex = 0;
+let slideIndex = localStorage.getItem('currentSlideIndex') || 1;
+// let slideIndex = 3;
 const slider = document.querySelector('.slider');
 const sliderItems = document.querySelector('.slider-wrapper');
 const prev = document.querySelector('.slider-btn--prev');
@@ -18,7 +19,7 @@ function slide(items, prev, next) {
     lastSlide = slides[slidesLength - 1],
     cloneFirst = firstSlide.cloneNode(true),
     cloneLast = lastSlide.cloneNode(true),
-    index = 0,
+    index = slideIndex -1,
     allowShift = true;
 
   // Clone first and last slide
@@ -118,20 +119,23 @@ function slide(items, prev, next) {
     }
 
     allowShift = true;
+    localStorage.setItem('currentSlideIndex', index + 1);
     createPlayers(index + 1);
-    startPlayers()
+    startPlayers();
   }
 }
 
-createPlayers(0);
+
 // startPlayers()
 slide(sliderItems, prev, next);
+sliderItems.style.left = -sliderItems.offsetWidth * slideIndex + 'px';
+createPlayers(slideIndex);
 
 function startPlayers() {
   const players = document.querySelectorAll('audio');
   const playersGui = document.querySelectorAll('.audio-toggle');
-  playersGui.forEach(item => item.classList.add('playing'));
-  players.forEach(item => item.play());
+  playersGui.forEach((item) => item.classList.add('playing'));
+  players.forEach((item) => item.play());
 }
 
 //создаем плееры
@@ -157,7 +161,7 @@ function createPlayers(slideIndex) {
     audio.src = src;
     audio.volume = 0.35;
     audio.dataset.sound = element;
-    audio.autoplay = true;
+    // audio.autoplay = true;
     audio.loop = true;
     document.body.append(audio);
     // добавляем гуи плеры
@@ -215,7 +219,6 @@ playersWrapper.addEventListener('click', (event) => {
         }
       }
       if (item.dataset.sound === snd && event.target.value) {
-
         item.volume = event.target.value / 100;
       }
     });
