@@ -144,6 +144,7 @@ function createPlayers(slideIndex) {
     const audio = document.createElement('audio');
     const src = `assets/sounds/${element}.mp3`;
     audio.src = src;
+    audio.volume = 0.35;
     audio.dataset.sound = element;
     document.body.append(audio);
     // добавляем гуи плеры
@@ -173,7 +174,7 @@ function createGuiPlayer(name) {
   playerInput.type = 'range';
   playerInput.min = '0';
   playerInput.max = '100';
-  playerInput.value = '100';
+  playerInput.value = '35';
 
   // const playersWrapper = document.querySelector('.playlist');
 
