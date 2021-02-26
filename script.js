@@ -155,7 +155,7 @@ function createPlayers(slideIndex) {
     const audio = document.createElement('audio');
     const src = `assets/sounds/${element}.mp3`;
     audio.src = src;
-    audio.volume = 0.35;
+    audio.volume = 0.25;
     audio.dataset.sound = element;
     audio.preload = true;
     audio.loop = true;
@@ -187,7 +187,7 @@ function createGuiPlayer(name) {
   playerInput.type = 'range';
   playerInput.min = '0';
   playerInput.max = '100';
-  playerInput.value = '35';
+  playerInput.value = '25';
 
   playerLabel.append(playerInput);
   playerGui.append(playerButton);
