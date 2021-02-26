@@ -285,7 +285,7 @@ async function getWeather() {
   } else {
     if (res.status === 404) {
       temperature.textContent = '--';
-      weatherDescription.textContent = `Sorry, city not found`;
+      weatherDescription.textContent = `Sorry, the ${weatherInput.value} city is not found`;
     } else {
       temperature.textContent = '--';
       weatherDescription.textContent = `Response error: ${res.status}`;
