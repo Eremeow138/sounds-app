@@ -1,12 +1,11 @@
-let slideIndex = localStorage.getItem('currentSlideIndex') || 1;
-// let slideIndex = 3;
-const slider = document.querySelector('.slider');
+let slideIndex = localStorage.getItem('currentSlideIndex') || 1; //индекс слайда берем из локал сторейдж или 1
 const sliderItems = document.querySelector('.slider-wrapper');
 const prev = document.querySelector('.slider-btn--prev');
 const next = document.querySelector('.slider-btn--next');
 const playersWrapper = document.querySelector('.playlist');
 const btnFullScreen = document.querySelector('.fullscreen');
-function slide(items, prev, next) {
+// функция управления слайдером
+function slide(items, prev, next, index) { // обертка слайдов, кнопка назад, кнопка вперед, индекс текущего слайда
   let posX1 = 0,
     posX2 = 0,
     posInitial,
@@ -19,7 +18,6 @@ function slide(items, prev, next) {
     lastSlide = slides[slidesLength - 1],
     cloneFirst = firstSlide.cloneNode(true),
     cloneLast = lastSlide.cloneNode(true),
-    index = slideIndex -1,
     allowShift = true;
 
   // Clone first and last slide
@@ -28,8 +26,7 @@ function slide(items, prev, next) {
   items.insertBefore(cloneLast, firstSlide); // добавлям в начало клон последнего слайда
 
   // Mouse events
-  // items.addEventListener('mousedown', dragStart);
-  items.onmousedown = dragStart;
+  items.addEventListener('mousedown', dragStart);
   // Touch events
   items.addEventListener('touchstart', dragStart);
   items.addEventListener('touchend', dragEnd);
@@ -81,7 +78,6 @@ function slide(items, prev, next) {
     } else {
       items.style.left = posInitial + 'px';
     }
-    console.log(`posFinal= ${posFinal}, posInitial= ${posInitial}`);
     document.onmouseup = null;
     document.onmousemove = null;
   }
@@ -119,43 +115,41 @@ function slide(items, prev, next) {
     }
 
     allowShift = true;
-    localStorage.setItem('currentSlideIndex', index + 1);
-    createPlayers(index + 1);
-    startPlayers();
+    // после проверки индекса слайда:
+    localStorage.setItem('currentSlideIndex', index + 1); // записываем индекс в локалсторейдж
+    createPlayers(index + 1);// создаем плееры
+    startPlayers();// запускаем все плееры
   }
 }
-
-
-// startPlayers()
-slide(sliderItems, prev, next);
-sliderItems.style.left = -sliderItems.offsetWidth * slideIndex + 'px';
-createPlayers(slideIndex);
-
+// функция для старта всех плееров (нужна при перелистывании тем)
 function startPlayers() {
+  // находим на странице плееры и их кнопки
   const players = document.querySelectorAll('audio');
-  const playersGui = document.querySelectorAll('.audio-toggle');
-  playersGui.forEach((item) => item.classList.add('playing'));
+  const playerButton = document.querySelectorAll('.audio-toggle');
+  // запускаем плееры и вешаем класс на кнопки
+  playerButton.forEach((item) => item.classList.add('playing'));
   players.forEach((item) => item.play());
 }
 
-//создаем плееры
-
+//функция создания плееров
 function createPlayers(slideIndex) {
-  document.querySelectorAll('audio').forEach((item) => item.remove()); //удаляем все плееры
-  // удаляем все гуи плееры
-  const players = playersWrapper.querySelectorAll('.playlist-item');
+  //удаляем все плееры
+  const players = document.querySelectorAll('audio');
   players.forEach((item) => item.remove());
+  // удаляем все элементы управления плеерами
+  const playersButtons = playersWrapper.querySelectorAll('.playlist-item');
+  playersButtons.forEach((item) => item.remove());
 
-  // получаем звуки
+  // получаем звуки из атрибутов видео одной строкой
   let sounds = sliderItems.querySelectorAll('.slider-slide')[slideIndex].dataset
     .sounds;
-  if (!sounds) {
+  if (!sounds) {// если звуков нет - не добавляем ничего
     return false;
   }
 
-  const soundsArr = sounds.split(' ');
+  const soundsArr = sounds.split(' '); //делим строку звуков на отдельные звуки
   soundsArr.forEach((element) => {
-    // добавляем на страницу новые плееры
+    // добавляем на страницу новые плееры для каждого звука
     const audio = document.createElement('audio');
     const src = `assets/sounds/${element}.mp3`;
     audio.src = src;
@@ -164,7 +158,7 @@ function createPlayers(slideIndex) {
     audio.preload = true;
     audio.loop = true;
     document.body.append(audio);
-    // добавляем гуи плеры
+    // добавляем элементы управления нашими плеерами
     playersWrapper.append(createGuiPlayer(element));
   });
 }
@@ -193,24 +187,20 @@ function createGuiPlayer(name) {
   playerInput.max = '100';
   playerInput.value = '35';
 
-  // const playersWrapper = document.querySelector('.playlist');
-
   playerLabel.append(playerInput);
   playerGui.append(playerButton);
   playerGui.append(playerLabel);
 
   return playerGui;
 }
-
+//добавляем слушатель клика на обертку наших плееров
 playersWrapper.addEventListener('click', (event) => {
-  const snd = event.target.dataset.sound; // получаем атрибут саунд
-  if (snd) {
-    // console.log(snd);
-    audioPlayers = document.querySelectorAll('audio');
-    audioPlayers.forEach((item) => {
-      if (item.dataset.sound === snd && !event.target.value) {
-        // console.log(event.target.value);
-        if (!event.target.classList.contains('playing')) {
+  const snd = event.target.dataset.sound; // получаем атрибут саунд у элемента по которому был клик
+  if (snd) {// если атрибут sound существует, то
+    audioPlayers = document.querySelectorAll('audio');//получаем все плееры
+    audioPlayers.forEach((item) => { // проходимся по каждому плееру
+      if (item.dataset.sound === snd && !event.target.value) { // если у плеера атрибут саунд совпадает с атрибутом саунд у элемента управления и у элемента управления нет значения value (значит это кнопка)
+        if (!event.target.classList.contains('playing')) { // если класса нет на кнопке, то стартуем плеер и добавляем класс
           item.play();
           event.target.classList.toggle('playing');
         } else {
@@ -218,13 +208,13 @@ playersWrapper.addEventListener('click', (event) => {
           event.target.classList.toggle('playing');
         }
       }
-      if (item.dataset.sound === snd && event.target.value) {
-        item.volume = event.target.value / 100;
+      if (item.dataset.sound === snd && event.target.value) { // если у плеера атрибут саунд совпадает с атрибутом саунд у элемента управления и у элемента управления есть значение value (значит это регулятор громкости)
+        item.volume = event.target.value / 100; //указываем громкость плееру
       }
     });
   }
 });
-
+//начало кода для полноэкранного режима
 btnFullScreen.addEventListener('click', (event) => {
   if (document.fullscreenElement !== null) {
     deactivateFullscreen(document.documentElement);
@@ -265,3 +255,9 @@ document.addEventListener('fullscreenchange', (event) => {
     btnFullScreen.classList.add('openfullscreen');
   }
 });
+//конец кода для полноэкранного режима
+
+// startPlayers()
+slide(sliderItems, prev, next, slideIndex - 1);
+sliderItems.style.left = -sliderItems.offsetWidth * slideIndex + 'px'; // перемещаем наш слайдер на нужный слайд при загрузке страницы
+createPlayers(slideIndex); // создаем плееры для нужного слайда при загрузке страницы
