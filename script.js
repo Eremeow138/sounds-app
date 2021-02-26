@@ -5,7 +5,8 @@ const next = document.querySelector('.slider-btn--next');
 const playersWrapper = document.querySelector('.playlist');
 const btnFullScreen = document.querySelector('.fullscreen');
 // функция управления слайдером
-function slide(items, prev, next, index) { // обертка слайдов, кнопка назад, кнопка вперед, индекс текущего слайда
+function slide(items, prev, next, index) {
+  // обертка слайдов, кнопка назад, кнопка вперед, индекс текущего слайда
   let posX1 = 0,
     posX2 = 0,
     posInitial,
@@ -117,8 +118,8 @@ function slide(items, prev, next, index) { // обертка слайдов, к�
     allowShift = true;
     // после проверки индекса слайда:
     localStorage.setItem('currentSlideIndex', index + 1); // записываем индекс в локалсторейдж
-    createPlayers(index + 1);// создаем плееры
-    startPlayers();// запускаем все плееры
+    createPlayers(index + 1); // создаем плееры
+    startPlayers(); // запускаем все плееры
   }
 }
 // функция для старта всех плееров (нужна при перелистывании тем)
@@ -143,7 +144,8 @@ function createPlayers(slideIndex) {
   // получаем звуки из атрибутов видео одной строкой
   let sounds = sliderItems.querySelectorAll('.slider-slide')[slideIndex].dataset
     .sounds;
-  if (!sounds) {// если звуков нет - не добавляем ничего
+  if (!sounds) {
+    // если звуков нет - не добавляем ничего
     return false;
   }
 
@@ -196,11 +198,15 @@ function createGuiPlayer(name) {
 //добавляем слушатель клика на обертку наших плееров
 playersWrapper.addEventListener('click', (event) => {
   const snd = event.target.dataset.sound; // получаем атрибут саунд у элемента по которому был клик
-  if (snd) {// если атрибут sound существует, то
-    audioPlayers = document.querySelectorAll('audio');//получаем все плееры
-    audioPlayers.forEach((item) => { // проходимся по каждому плееру
-      if (item.dataset.sound === snd && !event.target.value) { // если у плеера атрибут саунд совпадает с атрибутом саунд у элемента управления и у элемента управления нет значения value (значит это кнопка)
-        if (!event.target.classList.contains('playing')) { // если класса нет на кнопке, то стартуем плеер и добавляем класс
+  if (snd) {
+    // если атрибут sound существует, то
+    audioPlayers = document.querySelectorAll('audio'); //получаем все плееры
+    audioPlayers.forEach((item) => {
+      // проходимся по каждому плееру
+      if (item.dataset.sound === snd && !event.target.value) {
+        // если у плеера атрибут саунд совпадает с атрибутом саунд у элемента управления и у элемента управления нет значения value (значит это кнопка)
+        if (!event.target.classList.contains('playing')) {
+          // если класса нет на кнопке, то стартуем плеер и добавляем класс
           item.play();
           event.target.classList.toggle('playing');
         } else {
@@ -208,7 +214,8 @@ playersWrapper.addEventListener('click', (event) => {
           event.target.classList.toggle('playing');
         }
       }
-      if (item.dataset.sound === snd && event.target.value) { // если у плеера атрибут саунд совпадает с атрибутом саунд у элемента управления и у элемента управления есть значение value (значит это регулятор громкости)
+      if (item.dataset.sound === snd && event.target.value) {
+        // если у плеера атрибут саунд совпадает с атрибутом саунд у элемента управления и у элемента управления есть значение value (значит это регулятор громкости)
         item.volume = event.target.value / 100; //указываем громкость плееру
       }
     });
@@ -256,6 +263,38 @@ document.addEventListener('fullscreenchange', (event) => {
   }
 });
 //конец кода для полноэкранного режима
+// начало кода для работы с погодой
+const weatherIcon = document.querySelector('.weather-icon');
+const temperature = document.querySelector('.weather-temperature');
+const weatherDescription = document.querySelector('.weather-appearance');
+const weatherForm = document.querySelector('.weather-form');
+const weatherInput = document
+  .querySelector('.weather-form')
+  .querySelector('input');
+console.log(weatherInput);
+async function getWeather() {
+  console.log(weatherInput.value);
+  if (!weatherInput.value) {
+    return false;
+  }
+  const url = `https://api.openweathermap.org/data/2.5/weather?q=${weatherInput.value}&lang=en&appid=2c5ab2ada81f38ce038bf9d009c0b413&units=metric`;
+  const res = await fetch(url);
+  const data = await res.json();
+
+  weatherIcon.className = 'weather-icon owf';
+  weatherIcon.classList.add(`owf-${data.weather[0].id}`);
+  temperature.textContent = `${data.main.temp}°C`;
+  weatherDescription.textContent = data.weather[0].description;
+}
+function setCity(event) {
+  event.preventDefault();
+  getWeather();
+  weatherInput.blur();
+}
+document.addEventListener('DOMContentLoaded', getWeather);
+weatherForm.addEventListener('submit', setCity);
+// конец кода для работы с погодой
+
 
 // startPlayers()
 slide(sliderItems, prev, next, slideIndex - 1);
