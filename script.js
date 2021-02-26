@@ -268,12 +268,9 @@ const weatherIcon = document.querySelector('.weather-icon');
 const temperature = document.querySelector('.weather-temperature');
 const weatherDescription = document.querySelector('.weather-appearance');
 const weatherForm = document.querySelector('.weather-form');
-const weatherInput = document
-  .querySelector('.weather-form')
-  .querySelector('input');
-console.log(weatherInput);
+const weatherInput = weatherForm.querySelector('input');
+
 async function getWeather() {
-  console.log(weatherInput.value);
   if (!weatherInput.value) {
     return false;
   }
@@ -288,6 +285,7 @@ async function getWeather() {
 }
 function setCity(event) {
   event.preventDefault();
+  localStorage.setItem('city', weatherInput.value);
   getWeather();
   weatherInput.blur();
 }
@@ -295,8 +293,9 @@ document.addEventListener('DOMContentLoaded', getWeather);
 weatherForm.addEventListener('submit', setCity);
 // конец кода для работы с погодой
 
-
 // startPlayers()
+weatherInput.value = localStorage.getItem('city');
+getWeather();
 slide(sliderItems, prev, next, slideIndex - 1);
 sliderItems.style.left = -sliderItems.offsetWidth * slideIndex + 'px'; // перемещаем наш слайдер на нужный слайд при загрузке страницы
 createPlayers(slideIndex); // создаем плееры для нужного слайда при загрузке страницы
