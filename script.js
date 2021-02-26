@@ -276,12 +276,21 @@ async function getWeather() {
   }
   const url = `https://api.openweathermap.org/data/2.5/weather?q=${weatherInput.value}&lang=en&appid=2c5ab2ada81f38ce038bf9d009c0b413&units=metric`;
   const res = await fetch(url);
-  const data = await res.json();
-
-  weatherIcon.className = 'weather-icon owf';
-  weatherIcon.classList.add(`owf-${data.weather[0].id}`);
-  temperature.textContent = `${data.main.temp}°C`;
-  weatherDescription.textContent = data.weather[0].description;
+  if (res.ok) {
+    const data = await res.json();
+    weatherIcon.className = 'weather-icon owf';
+    weatherIcon.classList.add(`owf-${data.weather[0].id}`);
+    temperature.textContent = `${data.main.temp}°C`;
+    weatherDescription.textContent = data.weather[0].description;
+  } else {
+    if (res.status === 404) {
+      temperature.textContent = '--';
+      weatherDescription.textContent = `Sorry, city not found`;
+    } else {
+      temperature.textContent = '--';
+      weatherDescription.textContent = `Response error: ${res.status}`;
+    }
+  }
 }
 function setCity(event) {
   event.preventDefault();
