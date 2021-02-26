@@ -161,7 +161,7 @@ function createPlayers(slideIndex) {
     audio.src = src;
     audio.volume = 0.35;
     audio.dataset.sound = element;
-    // audio.autoplay = true;
+    audio.preload = true;
     audio.loop = true;
     document.body.append(audio);
     // добавляем гуи плеры
