@@ -177,7 +177,7 @@ function createGuiPlayer(name) {
   const playerLabel = document.createElement('label');
   playerLabel.className = 'audio-inner';
   playerLabel.title = 'Volume';
-  playerLabel.textContent = name;
+  playerLabel.textContent = name.replace(/-/g, ' ');
 
   const playerInput = document.createElement('input');
   playerInput.className = 'audio-volume';
