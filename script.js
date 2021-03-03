@@ -45,8 +45,12 @@ function slide(items, prev, next, index) {
   items.addEventListener('transitionend', checkIndex);
   // Change Width event
   window.addEventListener('resize', () => {
+    slideIndex = localStorage.getItem('currentSlideIndex') || 1;
     slideSize = slides[0].offsetWidth;
+    console.log(slideSize);
     sliderItems.style.left = -sliderItems.offsetWidth * slideIndex + 'px';
+    console.log(slideIndex);
+    console.log(sliderItems.style.left);
   });
   function dragStart(e) {
     e = e || window.event;
