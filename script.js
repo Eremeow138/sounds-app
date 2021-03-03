@@ -43,7 +43,11 @@ function slide(items, prev, next, index) {
 
   // Transition events
   items.addEventListener('transitionend', checkIndex);
-
+  // Change Width event
+  window.addEventListener('resize', () => {
+    slideSize = slides[0].offsetWidth;
+    sliderItems.style.left = -sliderItems.offsetWidth * slideIndex + 'px';
+  });
   function dragStart(e) {
     e = e || window.event;
     e.preventDefault();
