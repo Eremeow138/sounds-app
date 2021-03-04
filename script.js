@@ -10,7 +10,8 @@ function slide(items, prev, next, index) {
   let posX1 = 0,
     posX2 = 0,
     posInitial,
-    posFinal,
+    posInitialPX,
+    posFinalPX,
     threshold = 100,
     slides = items.querySelectorAll('.slider-slide'),
     slidesLength = slides.length,
@@ -43,19 +44,13 @@ function slide(items, prev, next, index) {
 
   // Transition events
   items.addEventListener('transitionend', checkIndex);
-  // Change Width event
-  window.addEventListener('resize', () => {
-    slideIndex = localStorage.getItem('currentSlideIndex') || 1;
-    slideSize = slides[0].offsetWidth;
-    console.log(slideSize);
-    sliderItems.style.left = -sliderItems.offsetWidth * slideIndex + 'px';
-    console.log(slideIndex);
-    console.log(sliderItems.style.left);
-  });
   function dragStart(e) {
     e = e || window.event;
     e.preventDefault();
-    posInitial = items.offsetLeft;
+    const arr = items.style.left.split('');
+    arr.pop();
+    posInitial = +arr.join('');
+    posInitialPX = items.offsetLeft; // posInitialPX - значение в пикселях требуется для работы перетаскивания
 
     if (e.type == 'touchstart') {
       posX1 = e.touches[0].clientX;
@@ -79,13 +74,13 @@ function slide(items, prev, next, index) {
   }
 
   function dragEnd(e) {
-    posFinal = items.offsetLeft;
-    if (posFinal - posInitial < -threshold) {
+    posFinalPX = items.offsetLeft;
+    if (posFinalPX - posInitialPX < -threshold) {
       shiftSlide(1, 'drag');
-    } else if (posFinal - posInitial > threshold) {
+    } else if (posFinalPX - posInitialPX > threshold) {
       shiftSlide(-1, 'drag');
     } else {
-      items.style.left = posInitial + 'px';
+      items.style.left = posInitial + '%';
     }
     document.onmouseup = null;
     document.onmousemove = null;
@@ -95,14 +90,16 @@ function slide(items, prev, next, index) {
 
     if (allowShift) {
       if (!action) {
-        posInitial = items.offsetLeft;
+        const arr = items.style.left.split('');
+        arr.pop();
+        posInitial = +arr.join('');
       }
 
       if (dir == 1) {
-        items.style.left = posInitial - slideSize + 'px';
+        items.style.left = posInitial - 100 + '%';
         index++;
       } else if (dir == -1) {
-        items.style.left = posInitial + slideSize + 'px';
+        items.style.left = posInitial + 100 + '%';
         index--;
       }
     }
@@ -114,12 +111,12 @@ function slide(items, prev, next, index) {
     items.classList.remove('shifting');
 
     if (index == -1) {
-      items.style.left = -(slidesLength * slideSize) + 'px';
+      items.style.left = -(slidesLength * 100) + '%';
       index = slidesLength - 1;
     }
 
     if (index == slidesLength) {
-      items.style.left = -(1 * slideSize) + 'px';
+      items.style.left = -(1 * 100) + '%';
       index = 0;
     }
 
@@ -314,5 +311,5 @@ weatherForm.addEventListener('submit', setCity);
 weatherInput.value = localStorage.getItem('city');
 getWeather();
 slide(sliderItems, prev, next, slideIndex - 1);
-sliderItems.style.left = -sliderItems.offsetWidth * slideIndex + 'px'; // перемещаем наш слайдер на нужный слайд при загрузке страницы
+sliderItems.style.left = -100 * slideIndex + '%'; // перемещаем наш слайдер на нужный слайд при загрузке страницы
 createPlayers(slideIndex); // создаем плееры для нужного слайда при загрузке страницы
