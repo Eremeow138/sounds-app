@@ -3,6 +3,7 @@
   margin: 0;
   padding: 0;
   user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 a:focus,
 button:focus,
@@ -31,8 +32,11 @@ button {
 ul {
   list-style: none;
 }
-
-@media (min-width: 768px) {
+.main {
+  height: 100vh;
+  /* overflow-y: hidden; */
+}
+@media (min-width: 425px) {
   .main {
     display: flex;
   }
@@ -44,6 +48,11 @@ ul {
   touch-action: pan-y;
   width: 100%;
   z-index: 1;
+}
+@media (min-width: 425px) {
+  .slider {
+    width: calc(100% - 300px);
+  }
 }
 @media (min-width: 768px) {
   .slider {
@@ -61,7 +70,7 @@ ul {
 }
 
 .slider-wrapper.shifting {
-  transition: left 0.2s ease-out;
+  transition: left 0.4s ease-out;
 }
 .slider-slide {
   position: relative;
@@ -74,14 +83,15 @@ ul {
   text-align: center;
   width: 100%;
 }
-@media (min-width: 768px) {
+@media (min-width: 425px) {
   .slider-slide {
-    height: 100vh;
+    /* height: 100vh; */
+    height: 100%;
   }
 }
 .slider-slide .video {
   height: 100%;
-  width: 177.77777778vh;
+  /* width: 177.77777778vh; */
   min-width: 100%;
   min-height: 56.25vw;
   position: absolute;
@@ -120,7 +130,16 @@ ul {
 .slider-btn--next {
   transform: rotate(180deg);
 }
-
+.sidebar {
+  /* height: 100vh; */
+  /* overflow:hidden; */
+  overflow-y:auto;
+}
+@media (min-width: 425px) {
+  .sidebar {
+    width: 300px;
+  }
+}
 @media (min-width: 768px) {
   .sidebar {
     width: 400px;
@@ -158,12 +177,20 @@ ul {
   font-weight: 300;
 }
 .sidebar-main {
-  padding-top: 30px;
 }
-@media (min-width: 768px) {
+@media (min-width: 425px) {
+  .sidebar-main {
+    min-height: calc(100vh - 132px);
+    /* max-height: calc(100vh - 72px - 60px); */
+    /* height: calc(100vh - 132px); */
+    /* overflow-y: auto; */
+  }
+}
+
+@media (min-width: 1024px) {
   .sidebar-main {
     padding-top: 30px;
-    min-height: calc(100vh - 132px);
+    /* min-height: calc(100vh - 132px); */
   }
 }
 .audio {
@@ -185,11 +212,14 @@ ul {
   background-size: contain;
   background-repeat: no-repeat;
   cursor: pointer;
-  transition: 0.4s;
+  transition: 0.2s;
 }
-.audio-toggle:hover {
-  filter: brightness(1) saturate(1);
+@media(hover: hover){
+  .audio-toggle:hover {
+    filter: brightness(1) saturate(1);
+  }
 }
+
 .audio-toggle:active {
   transform: scale(1.1);
 }
@@ -336,6 +366,9 @@ ul {
   width: 100%;
   max-width: 1400px;
   margin: 0 auto;
+  border-top: 1px solid;
+  border-image-slice: 1;
+  border-image-source: linear-gradient(to left, #38495a, #a2abb3, #38495a);
 }
 
 .github {
