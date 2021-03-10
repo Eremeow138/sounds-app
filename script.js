@@ -4,6 +4,7 @@ const prev = document.querySelector('.slider-btn--prev');
 const next = document.querySelector('.slider-btn--next');
 const playersWrapper = document.querySelector('.playlist');
 const btnFullScreen = document.querySelector('.fullscreen');
+const slides = sliderItems.querySelectorAll('.slider-slide');
 // функция управления слайдером
 function slide(items, prev, next, index) {
   // обертка слайдов, кнопка назад, кнопка вперед, индекс текущего слайда
@@ -13,7 +14,7 @@ function slide(items, prev, next, index) {
     posInitialPX,
     posFinalPX,
     threshold = 100,
-    slides = items.querySelectorAll('.slider-slide'),
+    // slides = items.querySelectorAll('.slider-slide'),
     slidesLength = slides.length,
     slideSize = slides[0].offsetWidth,
     firstSlide = slides[0],
@@ -125,7 +126,78 @@ function slide(items, prev, next, index) {
     localStorage.setItem('currentSlideIndex', index + 1); // записываем индекс в локалсторейдж
     createPlayers(index + 1); // создаем плееры
     startPlayers(); // запускаем все плееры
+    pauseAllVideo();
+    startVideo(index);
   }
+}
+function pauseAllVideo() {
+  slides.forEach((elem) => {
+    elem.querySelector('video').pause();
+  });
+}
+function startVideo(index) {
+  const video = slides[index].querySelector('video');
+  video.play();
+}
+// функция, которая устанавливает приоритет загрузки видео
+function loadPriority(index) {
+  const slidess = document
+    .querySelector('.slider-wrapper')
+    .querySelectorAll('.slider-slide');
+  const video = slidess[index + 1].querySelector('video');
+
+  video.preload = 'auto';
+  let isVideoOneCanPlay = false;
+  video.addEventListener('canplaythrough', (event) => {
+    if (isVideoOneCanPlay) {
+      return;
+    }
+    isVideoOneCanPlay = true;
+    console.log(`video number ${index} loaded`);
+    startVideo(index);
+
+    let previousIndex;
+    previousIndex = index - 1;
+
+    let nextIndex;
+    nextIndex = index + 1;
+
+    const preveousVideo = slidess[previousIndex + 1].querySelector('video');
+    const nextVideo = slidess[nextIndex + 1].querySelector('video');
+
+    let isPrevVideoCanPlay = false;
+    let isNextVideoCanPlay = false;
+
+    preveousVideo.preload = 'auto';
+    nextVideo.preload = 'auto';
+
+    preveousVideo.addEventListener('canplaythrough', () => {
+      if (isPrevVideoCanPlay) {
+        return;
+      }
+      console.log(`video number ${previousIndex} loaded`);
+      isPrevVideoCanPlay = true;
+      loadAll(isPrevVideoCanPlay, isNextVideoCanPlay);
+    });
+    nextVideo.addEventListener('canplaythrough', () => {
+      if (isNextVideoCanPlay) {
+        return;
+      }
+      console.log(`video number ${nextIndex} loaded`);
+      isNextVideoCanPlay = true;
+      loadAll(isPrevVideoCanPlay, isNextVideoCanPlay);
+    });
+    //функция загружает все остальные видео
+    function loadAll(prev, next) {
+      if (prev && next) {
+        console.log('loadAll');
+        slidess.forEach(elem => {
+
+          elem.querySelector('video').preload = 'auto';
+        });
+      };
+    };
+  });
 }
 // функция для старта всех плееров (нужна при перелистывании тем)
 function startPlayers() {
@@ -311,5 +383,6 @@ weatherForm.addEventListener('submit', setCity);
 weatherInput.value = localStorage.getItem('city');
 getWeather();
 slide(sliderItems, prev, next, slideIndex - 1);
+loadPriority(slideIndex - 1);
 sliderItems.style.left = -100 * slideIndex + '%'; // перемещаем наш слайдер на нужный слайд при загрузке страницы
 createPlayers(slideIndex); // создаем плееры для нужного слайда при загрузке страницы
