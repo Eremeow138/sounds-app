@@ -234,7 +234,7 @@ function createPlayers(slideIndex) {
     audio.src = src;
     audio.volume = 0.25;
     audio.dataset.sound = element;
-    audio.preload = true;
+    audio.preload = 'auto';
     audio.loop = true;
     document.body.append(audio);
     // добавляем элементы управления нашими плеерами
