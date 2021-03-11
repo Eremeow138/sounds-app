@@ -46,6 +46,9 @@ function slide(items, prev, next, index) {
   // Transition events
   items.addEventListener('transitionend', checkIndex);
   function dragStart(e) {
+    if (document.fullscreenElement !== null) {
+      return;
+    }
     e = e || window.event;
     e.preventDefault();
     const arr = items.style.left.split('');
@@ -352,10 +355,10 @@ playersWrapper.addEventListener('click', (event) => {
 });
 //начало кода для полноэкранного режима
 btnFullScreen.addEventListener('click', (event) => {
-  if (document.fullscreenElement !== null) {
-    deactivateFullscreen(document.documentElement);
+  if (document.fullscreenElement !== null) {  // элемент который в данный момент находится в полноэкранним режиме
+    deactivateFullscreen(slides[slideIndex-1]);
   } else {
-    activateFullscreen(document.documentElement);
+    activateFullscreen(slides[slideIndex-1]);
   }
 });
 
@@ -382,15 +385,6 @@ function deactivateFullscreen() {
   }
 }
 
-document.addEventListener('fullscreenchange', (event) => {
-  if (document.fullscreenElement) {
-    btnFullScreen.classList.remove('openfullscreen');
-    btnFullScreen.classList.add('exitfullscreen');
-  } else {
-    btnFullScreen.classList.remove('exitfullscreen');
-    btnFullScreen.classList.add('openfullscreen');
-  }
-});
 //конец кода для полноэкранного режима
 // начало кода для работы с погодой
 const weatherIcon = document.querySelector('.weather-icon');
