@@ -83,6 +83,38 @@ ul {
   text-align: center;
   width: 100%;
 }
+
+.slider-slide::before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 50px;
+  height: 50px;
+  border: 10px solid #00c9b7;
+  border-left-color: transparent;
+  border-radius: 50%;
+  animation-name: rotate;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+}
+
+.slider-slide.preloader::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 50px;
+  height: 50px;
+  border: 10px solid #00c9b7;
+  border-left-color: transparent;
+  border-radius: 50%;
+  animation-name: rotate;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+}
 @media (min-width: 425px) {
   .slider-slide {
     /* height: 100vh; */
@@ -133,7 +165,7 @@ ul {
 .sidebar {
   /* height: 100vh; */
   /* overflow:hidden; */
-  overflow-y:auto;
+  overflow-y: auto;
 }
 @media (min-width: 425px) {
   .sidebar {
@@ -214,7 +246,7 @@ ul {
   cursor: pointer;
   transition: 0.2s;
 }
-@media(hover: hover){
+@media (hover: hover) {
   .audio-toggle:hover {
     filter: brightness(1) saturate(1);
   }
@@ -225,6 +257,11 @@ ul {
 }
 .audio-toggle.playing {
   filter: brightness(1) saturate(1);
+}
+.audio-toggle.loading {
+  animation-name: blinking;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
 }
 .audio-inner {
   padding-bottom: 35px;
@@ -416,6 +453,75 @@ ul {
   right: -5px;
 }
 
+.preloader-main {
+  /*фиксированное позиционирование*/
+  position: fixed;
+  /* координаты положения */
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  /* фоновый цвет элемента */
+  background: #313940;
+  /* размещаем блок над всеми элементами на странице (это значение должно быть больше, чем у любого другого позиционированного элемента на странице) */
+  z-index: 1001;
+}
+
+.preloader-main__row {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  width: 70px;
+  height: 70px;
+  margin-top: -35px;
+  margin-left: -35px;
+  text-align: center;
+  animation: preloader-rotate 2s infinite linear;
+}
+
+.preloader-main__item {
+  position: absolute;
+  display: inline-block;
+  top: 0;
+  background-color: #0bdbac;
+  border-radius: 100%;
+  width: 35px;
+  height: 35px;
+  animation: preloader-bounce 2s infinite ease-in-out;
+}
+
+.preloader-main__item:last-child {
+  top: auto;
+  bottom: 0;
+  animation-delay: -1s;
+}
+
+@keyframes preloader-rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes preloader-bounce {
+  0%,
+  100% {
+    transform: scale(0);
+  }
+
+  50% {
+    transform: scale(1);
+  }
+}
+
+.loaded_hiding .preloader-main {
+  transition: 0.3s opacity;
+  opacity: 0;
+}
+
+.loaded .preloader-main {
+  display: none;
+}
+
 @keyframes moveGradient {
   50% {
     background-position: 100% 50%;
@@ -445,5 +551,26 @@ ul {
 
   90% {
     transform: translate(1px, 2px) rotate(0deg);
+  }
+}
+
+@keyframes blinking {
+  0% {
+    filter: brightness(0.1) saturate(0.1);
+  }
+  50% {
+    filter: brightness(1) saturate(1);
+  }
+  100% {
+    filter: brightness(0.1) saturate(0.1);
+  }
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }

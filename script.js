@@ -128,6 +128,9 @@ function slide(items, prev, next, index) {
     startPlayers(); // запускаем все плееры
     pauseAllVideo();
     startVideo(index);
+    removeActiveClassFromAllVideo();
+    addActiveClassToVideo(index);
+
   }
 }
 function pauseAllVideo() {
@@ -139,6 +142,21 @@ function startVideo(index) {
   const video = slides[index].querySelector('video');
   video.play();
 }
+function removeActiveClassFromAllVideo() {
+  slides.forEach((elem) => {
+    elem.querySelector('video').classList.remove('active');
+  });
+}
+function removeSeekedClassFromAllVideo(params) {
+  slides.forEach((elem) => {
+    elem.querySelector('video').classList.remove('seeked');
+  });
+}
+function addActiveClassToVideo(index) {
+  const video = slides[index].querySelector('video');
+  video.classList.add('active');
+}
+
 // функция, которая устанавливает приоритет загрузки видео
 function loadPriority(index) {
   const slidess = document
@@ -191,8 +209,7 @@ function loadPriority(index) {
     function loadAll(prev, next) {
       if (prev && next) {
         console.log('loadAll');
-        slidess.forEach(elem => {
-
+        slidess.forEach((elem) => {
           elem.querySelector('video').preload = 'auto';
         });
       };
@@ -236,6 +253,38 @@ function createPlayers(slideIndex) {
     audio.dataset.sound = element;
     audio.preload = 'auto';
     audio.loop = true;
+    //добавляем слушатели на аудио элемент
+    audio.addEventListener('waiting', (event) => {
+      const button = document.querySelector(
+        `.audio-toggle[data-sound=${element}]`
+      );
+      setTimeout(()=>{//задержка нужна для искуственного изменения порядка появления событий
+        if (button && !button.classList.contains('seeked')) {
+          button.classList.add('loading');
+        }
+
+      },100);
+
+    });
+    audio.addEventListener('canplaythrough', (event) => {
+      const button = document.querySelector(
+        `.audio-toggle[data-sound=${element}]`
+      );
+      setTimeout(()=>{
+        if (button) {
+          button.classList.remove('loading');
+        }
+      },150);
+
+    });
+    audio.addEventListener('seeked', (event)=>{
+      const button = document.querySelector(
+        `.audio-toggle[data-sound=${element}]`
+      );
+      if (button) {
+        button.classList.add('seeked');
+      }
+    })
     document.body.append(audio);
     // добавляем элементы управления нашими плеерами
     playersWrapper.append(createGuiPlayer(element));
@@ -379,7 +428,49 @@ document.addEventListener('DOMContentLoaded', getWeather);
 weatherForm.addEventListener('submit', setCity);
 // конец кода для работы с погодой
 
+// вешаем слушатели медиасобытий на каждое видео
+slides.forEach((item) => {
+  const video = item.querySelector('video');
+  video.addEventListener('waiting', (event) => {
+    setTimeout(()=>{
+      if (video.classList.contains('active')&&!video.classList.contains('seeked')) {
+        video.closest('.slider-slide').classList.add('preloader');
+        video.pause();
+      }
+    },300);
+
+  });
+  video.addEventListener('stalled', (event) => {
+    setTimeout(()=>{
+      if (video.classList.contains('active')&&!video.classList.contains('seeked')) {
+        video.closest('.slider-slide').classList.add('preloader');
+        video.pause();
+      }
+    },300);
+
+  });
+
+  video.addEventListener('canplaythrough', (event) => {
+    setTimeout(()=>{
+      if (video.classList.contains('active')) {
+        video.closest('.slider-slide').classList.remove('preloader');
+        video.play();
+      }
+    },350);
+
+  });
+  video.addEventListener('seeked', (event)=>{
+    if(video.classList.contains('active')){
+      video.classList.add('seeked');
+    }
+  })
+});
+//убираем прелоадер
+window.onload = function () {
+  document.body.classList.add('loaded');
+};
 // startPlayers()
+addActiveClassToVideo(slideIndex - 1);
 weatherInput.value = localStorage.getItem('city');
 getWeather();
 slide(sliderItems, prev, next, slideIndex - 1);
