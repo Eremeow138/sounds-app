@@ -375,6 +375,12 @@ ul {
 .weather-temperature {
   font-size: 25px;
 }
+.weather-arrow{
+  width: 75px;
+}
+.weather-speed{
+  font-size: 25px;
+}
 .fullscreen {
   position: absolute;
   top: 20px;

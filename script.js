@@ -390,9 +390,30 @@ function deactivateFullscreen() {
 const weatherIcon = document.querySelector('.weather-icon');
 const temperature = document.querySelector('.weather-temperature');
 const weatherDescription = document.querySelector('.weather-appearance');
+const windSpeed = document.querySelector('.weather-speed');
+const windDirectionImage = document.querySelector('.weather-arrow');
+const windDirectionText = document.querySelector('.weather-direction');
 const weatherForm = document.querySelector('.weather-form');
 const weatherInput = weatherForm.querySelector('input');
-
+const cardinals = {
+  0: 'N',
+  1: 'NNE',
+  2: 'NE',
+  3: 'ENE',
+  4: 'E',
+  5: 'ESE',
+  6: 'SE',
+  7: 'SSE',
+  8: 'S',
+  9: 'SSW',
+  10: 'SW',
+  11: 'WSW',
+  12: 'W',
+  13: 'WNW',
+  14: 'NW',
+  15: 'NNW',
+  16: 'N',
+};
 async function getWeather() {
   if (!weatherInput.value) {
     return false;
@@ -401,10 +422,16 @@ async function getWeather() {
   const res = await fetch(url);
   if (res.ok) {
     const data = await res.json();
+    console.log(data);
     weatherIcon.className = 'weather-icon owf';
     weatherIcon.classList.add(`owf-${data.weather[0].id}`);
     temperature.textContent = `${data.main.temp}°C`;
     weatherDescription.textContent = data.weather[0].description;
+    console.log(data.wind.deg);
+    windDirectionImage.style.transform = `rotate(${data.wind.deg}deg)`;
+    windSpeed.textContent = `${data.wind.speed}M/S`;
+    windDirectionText.textContent = cardinals[Math.round(data.wind.deg/22.5)];
+
   } else {
     if (res.status === 404) {
       temperature.textContent = '--';
