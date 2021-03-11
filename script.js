@@ -433,6 +433,7 @@ slides.forEach((item) => {
       if (video.classList.contains('active')&&!video.classList.contains('seeked')) {
         video.closest('.slider-slide').classList.add('preloader');
         video.pause();
+        console.log('waiting');
       }
     },300);
 
@@ -442,6 +443,7 @@ slides.forEach((item) => {
       if (video.classList.contains('active')&&!video.classList.contains('seeked')) {
         video.closest('.slider-slide').classList.add('preloader');
         video.pause();
+        console.log('stalled');
       }
     },300);
 
@@ -452,6 +454,8 @@ slides.forEach((item) => {
       if (video.classList.contains('active')) {
         video.closest('.slider-slide').classList.remove('preloader');
         video.play();
+        console.log('canplaythrough');
+        video.classList.remove('seeked');
       }
     },350);
 
@@ -460,6 +464,7 @@ slides.forEach((item) => {
     if(video.classList.contains('active')){
       video.classList.add('seeked');
     }
+    console.log('seeked');
   })
 });
 //убираем прелоадер
