@@ -107,7 +107,7 @@ function slide(items, prev, next, index) {
 
     allowShift = false;
   }
-
+  // на функцию checkIndex зацеплено много всего, так как именно то индексу текущего слайда строится остальная работа приложения
   function checkIndex() {
     items.classList.remove('shifting');
 
@@ -126,11 +126,11 @@ function slide(items, prev, next, index) {
     localStorage.setItem('currentSlideIndex', index + 1); // записываем индекс в локалсторейдж
     createPlayers(index + 1); // создаем плееры
     startPlayers(); // запускаем все плееры
-    pauseAllVideo();
-    startVideo(index);
-    removeActiveClassFromAllVideo();
-    removeSeekedClassFromAllVideo();
-    addActiveClassToVideo(index);
+    pauseAllVideo();// ставим все видео на паузу
+    startVideo(index);// запускаем текущее видео
+    removeActiveClassFromAllVideo(); // убираем класс Active со всех видео (он используется в качестве флага. Если класс у видео есть, то функции, повешанные на медийные события, срабатывают)
+    removeSeekedClassFromAllVideo(); //убираем класс Seeked (используется в качестве флага. Если класс у видео есть, то функция повешанная на событие waiting не сработает)
+    addActiveClassToVideo(index); //добавляем класс эктив на текущее видео
 
   }
 }
@@ -143,11 +143,13 @@ function startVideo(index) {
   const video = slides[index].querySelector('video');
   video.play();
 }
+// убираем класс Active со всех видео (он используется в качестве флага. Если класс у видео есть, то функции, повешанные на медийные события, срабатывают)
 function removeActiveClassFromAllVideo() {
   slides.forEach((elem) => {
     elem.querySelector('video').classList.remove('active');
   });
 }
+//убираем класс Seeked (используется в качестве флага. Если класс у видео есть, то функция повешанная на событие waiting не сработает)
 function removeSeekedClassFromAllVideo() {
   slides.forEach((elem) => {
     elem.querySelector('video').classList.remove('seeked');
@@ -217,7 +219,7 @@ function loadPriority(index) {
     };
   });
 }
-// функция для старта всех плееров (нужна при перелистывании тем)
+// функция для старта всех аудиоплееров (нужна при перелистывании тем)
 function startPlayers() {
   // находим на странице плееры и их кнопки
   const players = document.querySelectorAll('audio');
@@ -227,7 +229,7 @@ function startPlayers() {
   players.forEach((item) => item.play());
 }
 
-//функция создания плееров
+//функция создания аудиоплееров
 function createPlayers(slideIndex) {
   //удаляем все плееры
   const players = document.querySelectorAll('audio');
@@ -254,7 +256,7 @@ function createPlayers(slideIndex) {
     audio.dataset.sound = element;
     audio.preload = 'auto';
     audio.loop = true;
-    //добавляем слушатели на аудио элемент
+    //добавляем слушатели на аудио элемент, это нужно для работы прелоадеров
     audio.addEventListener('waiting', (event) => {
       const button = document.querySelector(
         `.audio-toggle[data-sound=${element}]`
@@ -429,7 +431,7 @@ document.addEventListener('DOMContentLoaded', getWeather);
 weatherForm.addEventListener('submit', setCity);
 // конец кода для работы с погодой
 
-// вешаем слушатели медиасобытий на каждое видео
+// вешаем слушатели медиасобытий на каждое видео, нужно для работы прелоадеров
 slides.forEach((item) => {
   const video = item.querySelector('video');
   video.addEventListener('waiting', (event) => {
