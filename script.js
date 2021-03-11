@@ -129,6 +129,7 @@ function slide(items, prev, next, index) {
     pauseAllVideo();
     startVideo(index);
     removeActiveClassFromAllVideo();
+    removeSeekedClassFromAllVideo();
     addActiveClassToVideo(index);
 
   }
@@ -147,7 +148,7 @@ function removeActiveClassFromAllVideo() {
     elem.querySelector('video').classList.remove('active');
   });
 }
-function removeSeekedClassFromAllVideo(params) {
+function removeSeekedClassFromAllVideo() {
   slides.forEach((elem) => {
     elem.querySelector('video').classList.remove('seeked');
   });
