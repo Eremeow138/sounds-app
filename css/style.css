@@ -377,6 +377,14 @@ ul {
 }
 .weather-arrow{
   width: 75px;
+  transition-property: transform;
+  transition-duration: 2s;
+
+}
+.weather-arrow:hover {
+  animation: rotating 2s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate, normal, reverse;
 }
 .weather-speed{
   font-size: 25px;
@@ -578,5 +586,11 @@ ul {
   }
   100% {
     transform: rotate(360deg);
+  }
+}
+@keyframes rotating {
+
+  100% {
+    transform: rotate(1440deg);
   }
 }
