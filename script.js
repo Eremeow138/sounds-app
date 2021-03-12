@@ -129,12 +129,11 @@ function slide(items, prev, next, index) {
     localStorage.setItem('currentSlideIndex', index + 1); // записываем индекс в локалсторейдж
     createPlayers(index + 1); // создаем плееры
     startPlayers(); // запускаем все плееры
-    pauseAllVideo();// ставим все видео на паузу
-    startVideo(index);// запускаем текущее видео
+    pauseAllVideo(); // ставим все видео на паузу
+    startVideo(index); // запускаем текущее видео
     removeActiveClassFromAllVideo(); // убираем класс Active со всех видео (он используется в качестве флага. Если класс у видео есть, то функции, повешанные на медийные события, срабатывают)
     removeSeekedClassFromAllVideo(); //убираем класс Seeked (используется в качестве флага. Если класс у видео есть, то функция повешанная на событие waiting не сработает)
     addActiveClassToVideo(index); //добавляем класс эктив на текущее видео
-
   }
 }
 function pauseAllVideo() {
@@ -218,8 +217,8 @@ function loadPriority(index) {
         slidess.forEach((elem) => {
           elem.querySelector('video').preload = 'auto';
         });
-      };
-    };
+      }
+    }
   });
 }
 // функция для старта всех аудиоплееров (нужна при перелистывании тем)
@@ -264,33 +263,31 @@ function createPlayers(slideIndex) {
       const button = document.querySelector(
         `.audio-toggle[data-sound=${element}]`
       );
-      setTimeout(()=>{//задержка нужна для искуственного изменения порядка появления событий
+      setTimeout(() => {
+        //задержка нужна для искуственного изменения порядка появления событий
         if (button && !button.classList.contains('seeked')) {
           button.classList.add('loading');
         }
-
-      },100);
-
+      }, 100);
     });
     audio.addEventListener('canplaythrough', (event) => {
       const button = document.querySelector(
         `.audio-toggle[data-sound=${element}]`
       );
-      setTimeout(()=>{
+      setTimeout(() => {
         if (button) {
           button.classList.remove('loading');
         }
-      },150);
-
+      }, 150);
     });
-    audio.addEventListener('seeked', (event)=>{
+    audio.addEventListener('seeked', (event) => {
       const button = document.querySelector(
         `.audio-toggle[data-sound=${element}]`
       );
       if (button) {
         button.classList.add('seeked');
       }
-    })
+    });
     document.body.append(audio);
     // добавляем элементы управления нашими плеерами
     playersWrapper.append(createGuiPlayer(element));
@@ -355,10 +352,11 @@ playersWrapper.addEventListener('click', (event) => {
 });
 //начало кода для полноэкранного режима
 btnFullScreen.addEventListener('click', (event) => {
-  if (document.fullscreenElement !== null) {  // элемент который в данный момент находится в полноэкранним режиме
-    deactivateFullscreen(slides[slideIndex-1]);
+  if (document.fullscreenElement !== null) {
+    // элемент который в данный момент находится в полноэкранним режиме
+    deactivateFullscreen(slides[slideIndex - 1]);
   } else {
-    activateFullscreen(slides[slideIndex-1]);
+    activateFullscreen(slides[slideIndex - 1]);
   }
 });
 
@@ -430,14 +428,13 @@ async function getWeather() {
     console.log(data.wind.deg);
     windDirectionImage.style.transform = `rotate(${data.wind.deg}deg)`;
     windSpeed.textContent = `${data.wind.speed}M/S`;
-    windDirectionText.textContent = cardinals[Math.round(data.wind.deg/22.5)];
-
+    windDirectionText.textContent = cardinals[Math.round(data.wind.deg / 22.5)];
   } else {
+    temperature.textContent = '--';
+    windSpeed.textContent = '--';
     if (res.status === 404) {
-      temperature.textContent = '--';
       weatherDescription.textContent = `Sorry, the ${weatherInput.value} city is not found`;
     } else {
-      temperature.textContent = '--';
       weatherDescription.textContent = `Response error: ${res.status}`;
     }
   }
@@ -456,43 +453,46 @@ weatherForm.addEventListener('submit', setCity);
 slides.forEach((item) => {
   const video = item.querySelector('video');
   video.addEventListener('waiting', (event) => {
-    setTimeout(()=>{
-      if (video.classList.contains('active')&&!video.classList.contains('seeked')) {
+    setTimeout(() => {
+      if (
+        video.classList.contains('active') &&
+        !video.classList.contains('seeked')
+      ) {
         video.closest('.slider-slide').classList.add('preloader');
         video.pause();
         console.log('waiting');
       }
-    },300);
-
+    }, 300);
   });
   video.addEventListener('stalled', (event) => {
-    setTimeout(()=>{
-      if (video.classList.contains('active')&&!video.classList.contains('seeked')) {
+    setTimeout(() => {
+      if (
+        video.classList.contains('active') &&
+        !video.classList.contains('seeked')
+      ) {
         video.closest('.slider-slide').classList.add('preloader');
         video.pause();
         console.log('stalled');
       }
-    },300);
-
+    }, 300);
   });
 
   video.addEventListener('canplaythrough', (event) => {
-    setTimeout(()=>{
+    setTimeout(() => {
       if (video.classList.contains('active')) {
         video.closest('.slider-slide').classList.remove('preloader');
         video.play();
         console.log('canplaythrough');
         video.classList.remove('seeked');
       }
-    },350);
-
+    }, 350);
   });
-  video.addEventListener('seeked', (event)=>{
-    if(video.classList.contains('active')){
+  video.addEventListener('seeked', (event) => {
+    if (video.classList.contains('active')) {
       video.classList.add('seeked');
     }
     console.log('seeked');
-  })
+  });
 });
 //убираем прелоадер
 window.onload = function () {
