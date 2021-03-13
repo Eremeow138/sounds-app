@@ -427,7 +427,7 @@ async function getWeather() {
     weatherDescription.textContent = data.weather[0].description;
     console.log(data.wind.deg);
     windDirectionImage.style.transform = `rotate(${data.wind.deg}deg)`;
-    windSpeed.textContent = `${data.wind.speed}M/S`;
+    windSpeed.textContent = `${data.wind.speed}m/s`;
     windDirectionText.textContent = cardinals[Math.round(data.wind.deg / 22.5)];
   } else {
     temperature.textContent = '--';

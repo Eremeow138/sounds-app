@@ -305,8 +305,22 @@ ul {
   transition: 0.4s ease;
 }
 .weather-inner {
+  width: 70%;
+  margin: auto;
   align-items: center;
   display: flex;
+  justify-content: center;
+}
+.weather-item{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+}
+.weather-description{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
 }
 .weather-form {
@@ -367,11 +381,13 @@ ul {
 }
 .weather-icon {
   font-size: 78px;
-  margin-right: 15px;
+  margin-left: -8px;
+  /* margin-right: 15px; */
 }
 .weather-icon:hover {
   animation: shake 1.5s;
 }
+
 .weather-temperature {
   font-size: 25px;
 }
