@@ -478,6 +478,7 @@ slides.forEach((item) => {
   });
 
   video.addEventListener('canplaythrough', (event) => {
+    // console.log(`video ${video.querySelector('source').src} loaded`);
     setTimeout(() => {
       if (video.classList.contains('active')) {
         video.closest('.slider-slide').classList.remove('preloader');
@@ -494,10 +495,34 @@ slides.forEach((item) => {
     console.log('seeked');
   });
 });
-//убираем прелоадер
-window.onload = function () {
-  document.body.classList.add('loaded');
-};
+
+//главный прелоадер
+function loadBar() {
+  const videoCount = document.querySelectorAll('video').length; // считаем количество видео на странице
+  const percent = 100 / videoCount; // процент загрузки на одно видео
+  let progressPercent = 0;
+  const progressBar = document.querySelector('.preloader-main-bar');
+
+  slides.forEach((item) => {
+    const video = item.querySelector('video'); // каждому видео вешаем слушатель на событие canplaythrough
+    video.addEventListener('canplaythrough', () => {
+      updateProgress(); // при canplaythrough вызываем функцию updateProgress
+    });
+  });
+
+  function updateProgress() {
+    progressPercent += percent; // пририщиваем процент
+    progressBar.style.width = `${progressPercent}%`; // приращиваем длинну прогресбара
+    if (progressPercent >= 100) { // после 100 процентов скрываем прелоадер
+      setTimeout(() => { // задержка на 500мс нужна, чтобы прогресбар спокойно дошел до конца, потому что у прогресбара есть свойство транзишн: all 0.5s. (плавненько-красивенько)
+        document.body.classList.add('loaded');
+        return;
+      }, 500);
+    }
+  }
+}
+loadBar();
+
 // startPlayers()
 addActiveClassToVideo(slideIndex - 1);
 weatherInput.value = localStorage.getItem('city');
