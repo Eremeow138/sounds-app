@@ -354,9 +354,9 @@ playersWrapper.addEventListener('click', (event) => {
 btnFullScreen.addEventListener('click', (event) => {
   if (document.fullscreenElement !== null) {
     // элемент который в данный момент находится в полноэкранним режиме
-    deactivateFullscreen(slides[slideIndex - 1]);
+    deactivateFullscreen(slides[(localStorage.getItem('currentSlideIndex') || 1) - 1]);
   } else {
-    activateFullscreen(slides[slideIndex - 1]);
+    activateFullscreen(slides[(localStorage.getItem('currentSlideIndex') || 1) - 1]);
   }
 });
 
