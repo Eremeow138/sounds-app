@@ -392,7 +392,7 @@ ul {
   font-size: 25px;
 }
 .weather-arrow{
-  width: 75px;
+  width: 55px;
   transition-property: transform;
   transition-duration: 2s;
 
