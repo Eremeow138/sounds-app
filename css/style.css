@@ -100,7 +100,7 @@ ul {
   animation-iteration-count: infinite;
 }
 
-.slider-slide.preloader::after {
+.slider-slide.preloader-slide::after {
   content: "";
   display: block;
   position: absolute;
@@ -482,7 +482,7 @@ ul {
   right: -5px;
 }
 
-.preloader-main {
+.preloader {
   /*фиксированное позиционирование*/
   position: fixed;
   /* координаты положения */
@@ -501,11 +501,11 @@ ul {
   /* размещаем блок над всеми элементами на странице (это значение должно быть больше, чем у любого другого позиционированного элемента на странице) */
   z-index: 1001;
 }
-.preloader-main-percent {
+.preloader-percent {
   color: #fff;
   font-size: 4vw;
 }
-.preloader-main-box {
+.preloader-box {
   margin-top: 10px;
   width: 15vw;
   height: 5px;
@@ -514,7 +514,7 @@ ul {
   text-align: left;
 }
 
-.preloader-main-bar {
+.preloader-bar {
   /* transition: all 0.5s; */
   background-color: #0bdbac;
   height: 100%;
@@ -537,7 +537,7 @@ ul {
   }
 }
 
-.loaded_hiding .preloader-main {
+.loaded_hiding .preloader {
   /* bottom: -100%;
   transition: all 0.7s;
   opacity: 0; */
@@ -548,16 +548,16 @@ ul {
   animation-fill-mode: forwards;
 }
 
-.loaded .preloader-main {
+.loaded .preloader {
   display: none;
 }
-.loaded_hiding .preloader-main-box {
+.loaded_hiding .preloader-box {
   animation-name: preloaderBox;
   animation-timing-function: cubic-bezier(0.68, -0.6, 0.32, 1.6);
   animation-fill-mode: forwards;
   animation-duration: 1s;
 }
-.loaded_hiding .preloader-main-percent {
+.loaded_hiding .preloader-percent {
   animation-name: preloaderBox;
   animation-timing-function: cubic-bezier(0.68, -0.6, 0.32, 1.6);
   animation-duration: 1.5s;

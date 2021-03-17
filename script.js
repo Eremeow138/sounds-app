@@ -462,7 +462,7 @@ slides.forEach((item) => {
         video.classList.contains('active') &&
         !video.classList.contains('seeked')
       ) {
-        video.closest('.slider-slide').classList.add('preloader');
+        video.closest('.slider-slide').classList.add('preloader-slide');
         video.pause();
         console.log('waiting');
       }
@@ -474,7 +474,7 @@ slides.forEach((item) => {
         video.classList.contains('active') &&
         !video.classList.contains('seeked')
       ) {
-        video.closest('.slider-slide').classList.add('preloader');
+        video.closest('.slider-slide').classList.add('preloader-slide');
         video.pause();
         console.log('stalled');
       }
@@ -485,7 +485,7 @@ slides.forEach((item) => {
     // console.log(`video ${video.querySelector('source').src} loaded`);
     setTimeout(() => {
       if (video.classList.contains('active')) {
-        video.closest('.slider-slide').classList.remove('preloader');
+        video.closest('.slider-slide').classList.remove('preloader-slide');
         video.play();
         console.log('canplaythrough');
         video.classList.remove('seeked');
@@ -507,8 +507,8 @@ function loadBar() {
   const videoCount = document.querySelectorAll('video').length; // считаем количество видео на странице
   const percentOnOneVideo = Math.ceil(100 / videoCount); // процент загрузки на одно видео
   let progressPercent = 0;
-  const progressBar = document.querySelector('.preloader-main-bar');
-  const percentElement = document.querySelector('.preloader-main-percent');
+  const progressBar = document.querySelector('.preloader-bar');
+  const percentElement = document.querySelector('.preloader-percent');
 
   function percentIncrement(from, to, elem) {
     // console.log(to);
@@ -517,7 +517,6 @@ function loadBar() {
       progressBar.style.width = `${from}%`;
       document.body.classList.add('loaded_hiding');
       setTimeout(() => {
-
         document.body.classList.add('loaded');
       }, 2000);
       return;
