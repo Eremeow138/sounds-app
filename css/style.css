@@ -311,13 +311,13 @@ ul {
   display: flex;
   justify-content: center;
 }
-.weather-item{
+.weather-item {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 50%;
 }
-.weather-description{
+.weather-description {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -391,18 +391,17 @@ ul {
 .weather-temperature {
   font-size: 25px;
 }
-.weather-arrow{
+.weather-arrow {
   width: 55px;
   transition-property: transform;
   transition-duration: 2s;
-
 }
 .weather-arrow:hover {
   animation: rotating 2s;
   animation-iteration-count: infinite;
   animation-direction: alternate, normal, reverse;
 }
-.weather-speed{
+.weather-speed {
   font-size: 25px;
 }
 .fullscreen {
@@ -500,7 +499,7 @@ ul {
   /* размещаем блок над всеми элементами на странице (это значение должно быть больше, чем у любого другого позиционированного элемента на странице) */
   z-index: 1001;
 }
-.preloader-main-header{
+.preloader-main-percent {
   color: #fff;
   font-size: 10vw;
 }
@@ -618,7 +617,6 @@ ul {
   }
 }
 @keyframes rotating {
-
   100% {
     transform: rotate(1440deg);
   }

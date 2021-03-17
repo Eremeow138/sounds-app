@@ -354,9 +354,13 @@ playersWrapper.addEventListener('click', (event) => {
 btnFullScreen.addEventListener('click', (event) => {
   if (document.fullscreenElement !== null) {
     // элемент который в данный момент находится в полноэкранним режиме
-    deactivateFullscreen(slides[(localStorage.getItem('currentSlideIndex') || 1) - 1]);
+    deactivateFullscreen(
+      slides[(localStorage.getItem('currentSlideIndex') || 1) - 1]
+    );
   } else {
-    activateFullscreen(slides[(localStorage.getItem('currentSlideIndex') || 1) - 1]);
+    activateFullscreen(
+      slides[(localStorage.getItem('currentSlideIndex') || 1) - 1]
+    );
   }
 });
 
@@ -497,29 +501,48 @@ slides.forEach((item) => {
 });
 
 //главный прелоадер
+//не повторяйте это - это костыльно
+
 function loadBar() {
   const videoCount = document.querySelectorAll('video').length; // считаем количество видео на странице
-  const percent = 100 / videoCount; // процент загрузки на одно видео
+  const percentOnOneVideo = Math.ceil(100 / videoCount); // процент загрузки на одно видео
   let progressPercent = 0;
   const progressBar = document.querySelector('.preloader-main-bar');
+  const percentElement = document.querySelector('.preloader-main-percent');
 
-  slides.forEach((item) => {
-    const video = item.querySelector('video'); // каждому видео вешаем слушатель на событие canplaythrough
-    video.addEventListener('canplaythrough', () => {
-      updateProgress(); // при canplaythrough вызываем функцию updateProgress
-    });
-  });
+  function percentIncrement(from, to, elem) {
+    // console.log(to);
+    if (from >= 100) {
+      elem.textContent = `${from}%`;
+      progressBar.style.width = `${from}%`;
 
-  function updateProgress() {
-    progressPercent += percent; // пририщиваем процент
-    progressBar.style.width = `${progressPercent}%`; // приращиваем длинну прогресбара
-    if (progressPercent >= 100) { // после 100 процентов скрываем прелоадер
-      setTimeout(() => { // задержка на 500мс нужна, чтобы прогресбар спокойно дошел до конца, потому что у прогресбара есть свойство транзишн: all 0.5s. (плавненько-красивенько)
+      setTimeout(() => {
         document.body.classList.add('loaded');
-        return;
       }, 500);
+      return;
+    }
+    if (from < 100) {
+      elem.textContent = `${from++}%`;
+      progressBar.style.width = `${from}%`;
+    }
+
+    if (from <= to) {
+      setTimeout(percentIncrement.bind(null, from, to, elem), 50);
     }
   }
+  function updateProgress(elem) {
+    elem.removeEventListener('canplaythrough', updateProgress);
+    progressPercent += percentOnOneVideo; // пририщиваем процент
+    percentIncrement(
+      percentElement.textContent.slice(0, -1),
+      progressPercent,
+      percentElement
+    );
+  }
+  slides.forEach((item) => {
+    const video = item.querySelector('video'); // каждому видео вешаем слушатель на событие canplaythrough
+    video.addEventListener('canplaythrough', updateProgress(video));
+  });
 }
 loadBar();
 
