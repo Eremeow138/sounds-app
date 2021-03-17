@@ -14,9 +14,7 @@ function slide(items, prev, next, index) {
     posInitialPX,
     posFinalPX,
     threshold = 100,
-    // slides = items.querySelectorAll('.slider-slide'),
     slidesLength = slides.length,
-    slideSize = slides[0].offsetWidth,
     firstSlide = slides[0],
     lastSlide = slides[slidesLength - 1],
     cloneFirst = firstSlide.cloneNode(true),
@@ -176,7 +174,6 @@ function loadPriority(index) {
       return;
     }
     isVideoOneCanPlay = true;
-    console.log(`video number ${index} loaded`);
     startVideo(index);
 
     let previousIndex;
@@ -198,7 +195,6 @@ function loadPriority(index) {
       if (isPrevVideoCanPlay) {
         return;
       }
-      console.log(`video number ${previousIndex} loaded`);
       isPrevVideoCanPlay = true;
       loadAll(isPrevVideoCanPlay, isNextVideoCanPlay);
     });
@@ -206,14 +202,12 @@ function loadPriority(index) {
       if (isNextVideoCanPlay) {
         return;
       }
-      console.log(`video number ${nextIndex} loaded`);
       isNextVideoCanPlay = true;
       loadAll(isPrevVideoCanPlay, isNextVideoCanPlay);
     });
     //функция загружает все остальные видео
     function loadAll(prev, next) {
       if (prev && next) {
-        console.log('loadAll');
         slidess.forEach((elem) => {
           elem.querySelector('video').preload = 'auto';
         });
@@ -424,12 +418,10 @@ async function getWeather() {
   const res = await fetch(url);
   if (res.ok) {
     const data = await res.json();
-    console.log(data);
     weatherIcon.className = 'weather-icon owf';
     weatherIcon.classList.add(`owf-${data.weather[0].id}`);
     temperature.textContent = `${data.main.temp}°C`;
     weatherDescription.textContent = data.weather[0].description;
-    console.log(data.wind.deg);
     windDirectionImage.style.transform = `rotate(${data.wind.deg}deg)`;
     windSpeed.textContent = `${data.wind.speed}m/s`;
     windDirectionText.textContent = cardinals[Math.round(data.wind.deg / 22.5)];
@@ -464,7 +456,6 @@ slides.forEach((item) => {
       ) {
         video.closest('.slider-slide').classList.add('preloader-slide');
         video.pause();
-        console.log('waiting');
       }
     }, 300);
   });
@@ -476,18 +467,15 @@ slides.forEach((item) => {
       ) {
         video.closest('.slider-slide').classList.add('preloader-slide');
         video.pause();
-        console.log('stalled');
       }
     }, 300);
   });
 
   video.addEventListener('canplaythrough', (event) => {
-    // console.log(`video ${video.querySelector('source').src} loaded`);
     setTimeout(() => {
       if (video.classList.contains('active')) {
         video.closest('.slider-slide').classList.remove('preloader-slide');
         video.play();
-        console.log('canplaythrough');
         video.classList.remove('seeked');
       }
     }, 350);
@@ -496,7 +484,6 @@ slides.forEach((item) => {
     if (video.classList.contains('active')) {
       video.classList.add('seeked');
     }
-    console.log('seeked');
   });
 });
 
@@ -511,7 +498,6 @@ function loadBar() {
   const percentElement = document.querySelector('.preloader-percent');
 
   function percentIncrement(from, to, elem) {
-    // console.log(to);
     if (from >= 100) {
       elem.textContent = `${from}%`;
       progressBar.style.width = `${from}%`;
@@ -525,7 +511,6 @@ function loadBar() {
       elem.textContent = `${from++}%`;
       progressBar.style.width = `${from}%`;
     }
-
     if (from <= to) {
       setTimeout(percentIncrement.bind(null, from, to, elem), 25);
     }
@@ -540,13 +525,12 @@ function loadBar() {
     );
   }
   slides.forEach((item) => {
-    const video = item.querySelector('video'); // каждому видео вешаем слушатель на событие canplaythrough
+    const video = item.querySelector('video'); // каждому видео вешаем слушатель на событие
     video.addEventListener('canplaythrough', updateProgress(video));
   });
 }
-loadBar();
 
-// startPlayers()
+loadBar();
 addActiveClassToVideo(slideIndex - 1);
 weatherInput.value = localStorage.getItem('city') || 'Minsk';
 getWeather();
