@@ -549,7 +549,7 @@ loadBar();
 
 // startPlayers()
 addActiveClassToVideo(slideIndex - 1);
-weatherInput.value = localStorage.getItem('city');
+weatherInput.value = localStorage.getItem('city') || 'Minsk';
 getWeather();
 slide(sliderItems, prev, next, slideIndex - 1);
 loadPriority(slideIndex - 1);
