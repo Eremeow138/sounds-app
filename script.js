@@ -45,24 +45,28 @@ function slide(items, prev, next, index) {
   items.addEventListener('transitionend', checkIndex);
   function dragStart(e) {
     if (document.fullscreenElement !== null) {
-      return;
-    }
-    e = e || window.event;
-    e.preventDefault();
-    const arr = items.style.left.split('');
-    arr.pop();
-    posInitial = +arr.join('');
-    posInitialPX = items.offsetLeft; // posInitialPX - значение в пикселях требуется для работы перетаскивания
-
-    if (e.type == 'touchstart') {
-      posX1 = e.touches[0].clientX;
+      return false;
     } else {
-      posX1 = e.clientX;
-      document.onmouseup = dragEnd;
-      document.onmousemove = dragAction;
+      e = e || window.event;
+      e.preventDefault();
+      const arr = items.style.left.split('');
+      arr.pop();
+      posInitial = +arr.join('');
+      posInitialPX = items.offsetLeft; // posInitialPX - значение в пикселях требуется для работы перетаскивания
+
+      if (e.type == 'touchstart') {
+        posX1 = e.touches[0].clientX;
+      } else {
+        posX1 = e.clientX;
+        document.onmouseup = dragEnd;
+        document.onmousemove = dragAction;
+      }
     }
   }
   function dragAction(e) {
+    if (document.fullscreenElement !== null) {
+      return false;
+    }
     e = e || window.event;
 
     if (e.type == 'touchmove') {
@@ -76,6 +80,9 @@ function slide(items, prev, next, index) {
   }
 
   function dragEnd(e) {
+    if (document.fullscreenElement !== null) {
+      return false;
+    }
     posFinalPX = items.offsetLeft;
     if (posFinalPX - posInitialPX < -threshold) {
       shiftSlide(1, 'drag');
