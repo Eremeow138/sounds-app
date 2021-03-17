@@ -88,8 +88,8 @@ ul {
   content: "";
   display: block;
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: calc(50% - 25px);
+  left: calc(50% - 25px);
   width: 50px;
   height: 50px;
   border: 10px solid #00c9b7;
@@ -104,8 +104,8 @@ ul {
   content: "";
   display: block;
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: calc(50% - 25px);
+  left: calc(50% - 25px);
   width: 50px;
   height: 50px;
   border: 10px solid #00c9b7;
