@@ -515,10 +515,11 @@ function loadBar() {
     if (from >= 100) {
       elem.textContent = `${from}%`;
       progressBar.style.width = `${from}%`;
-
+      document.body.classList.add('loaded_hiding');
       setTimeout(() => {
+
         document.body.classList.add('loaded');
-      }, 500);
+      }, 2000);
       return;
     }
     if (from < 100) {
@@ -527,7 +528,7 @@ function loadBar() {
     }
 
     if (from <= to) {
-      setTimeout(percentIncrement.bind(null, from, to, elem), 50);
+      setTimeout(percentIncrement.bind(null, from, to, elem), 25);
     }
   }
   function updateProgress(elem) {
